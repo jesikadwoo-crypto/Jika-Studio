@@ -1,0 +1,2622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jika Studio | Generador de Propuestas de Diseño — Jesika Bustos</title>
+  <meta name="description" content="Herramienta profesional de Jika Studio para transformar briefs de clientes en propuestas de diseño completas, estratégicas y comerciales en minutos.">
+  
+  <!-- Tipografías web de Google Fonts para renderizar fielmente las muestras recomendadas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&family=Outfit:wght@500;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@600;700;800&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       VARIABLES Y TEMA DE DISEÑO
+       ========================================================================== */
+    :root {
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      /* Paleta UI General */
+      --bg-app: #f8fafc;
+      --bg-panel: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --bg-input: #ffffff;
+      --border-color: #e2e8f0;
+      --border-focus: #3b82f6;
+      --text-main: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      
+      /* Acentos cromáticos de la Propuesta */
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --accent-dark: #1e40af;
+      --accent-text: #ffffff;
+      --success: #10b981;
+      --warning: #f59e0b;
+
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.08);
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-full: 9999px;
+    }
+
+    /* Variantes de tema para la propuesta */
+    [data-theme="indigo"] { --accent: #4f46e5; --accent-light: #eef2ff; --accent-dark: #3730a3; }
+    [data-theme="emerald"] { --accent: #059669; --accent-light: #ecfdf5; --accent-dark: #065f46; }
+    [data-theme="ochre"] { --accent: #b45309; --accent-light: #fffbeb; --accent-dark: #78350f; }
+    [data-theme="rose"] { --accent: #e11d48; --accent-light: #fff1f2; --accent-dark: #9f1239; }
+    [data-theme="charcoal"] { --accent: #1e293b; --accent-light: #f8fafc; --accent-dark: #0f172a; }
+
+    /* Reset y base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Barra Superior */
+    .top-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-badge {
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      color: white;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.03em;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: background-color 0.2s;
+    }
+
+    .brand-title h1 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-title span {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 0.15rem 0.55rem;
+      border-radius: var(--radius-full);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.825rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      text-decoration: none;
+      font-family: inherit;
+    }
+
+    .btn:hover {
+      background: var(--bg-subtle);
+      border-color: #cbd5e1;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(0.92);
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn-magic {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-magic:hover {
+      background: linear-gradient(135deg, #4338ca, #6d28d9);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-sm {
+      padding: 0.35rem 0.6rem;
+      font-size: 0.75rem;
+    }
+
+    .btn-icon {
+      padding: 0.5rem;
+    }
+
+    .select-dropdown {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.825rem;
+      font-weight: 500;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      color: var(--text-main);
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .select-dropdown:focus {
+      border-color: var(--border-focus);
+    }
+
+    /* Contenedor Principal Split */
+    .app-container {
+      display: grid;
+      grid-template-columns: 500px 1fr;
+      height: calc(100vh - 61px);
+      overflow: hidden;
+    }
+
+    @media (max-width: 1180px) {
+      .app-container {
+        grid-template-columns: 440px 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .app-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+      }
+      .mobile-view-tabs {
+        display: flex !important;
+      }
+      .panel-editor.mobile-hidden,
+      .panel-preview.mobile-hidden {
+        display: none !important;
+      }
+    }
+
+    /* Tabs móviles */
+    .mobile-view-tabs {
+      display: none;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.35rem;
+      position: sticky;
+      top: 61px;
+      z-index: 40;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      background: transparent;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--accent-light);
+      color: var(--accent);
+      border-color: rgba(37, 99, 235, 0.2);
+    }
+
+    /* Panel Izquierdo: Editor */
+    .panel-editor {
+      background: #ffffff;
+      border-right: 1px solid var(--border-color);
+      height: 100%;
+      overflow-y: auto;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .editor-section {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .section-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .section-title svg {
+      color: var(--accent);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-group.span-2 {
+      grid-column: span 2;
+    }
+
+    .form-label {
+      font-size: 0.775rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.85rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-input);
+      color: var(--text-main);
+      font-family: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .badge-pill {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.725rem;
+      font-weight: 700;
+      border-radius: var(--radius-full);
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+    }
+
+    /* Paleta en el Editor */
+    .color-swatches-editor {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .swatch-item-edit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      background: var(--bg-subtle);
+      padding: 0.4rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .swatch-color-input {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 34px;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      background: none;
+    }
+
+    .swatch-color-input::-webkit-color-swatch {
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: var(--radius-sm);
+    }
+
+    .swatch-role-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .swatch-hex-val {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* Lista interactiva de entregables en el editor */
+    .deliverable-item {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      padding: 0.6rem;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-md);
+      margin-bottom: 0.5rem;
+    }
+
+    .deliverable-item input[type="text"] {
+      flex: 1;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.825rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background: #fff;
+    }
+
+    .deliverable-item .btn-remove {
+      padding: 0.4rem;
+      background: #fee2e2;
+      color: #b91c1c;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    /* Panel Derecho: Vista Previa de la Propuesta */
+    .panel-preview {
+      background: #cbd5e1;
+      background-image: radial-gradient(#94a3b8 1px, transparent 1px);
+      background-size: 20px 20px;
+      height: 100%;
+      overflow-y: auto;
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Hoja de la propuesta / Papel digital */
+    .proposal-paper {
+      background: #ffffff;
+      width: 100%;
+      max-width: 840px;
+      min-height: 1100px;
+      box-shadow: var(--shadow-xl);
+      border-radius: var(--radius-lg);
+      padding: 3.5rem 3.5rem;
+      color: #1e293b;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 640px) {
+      .panel-preview {
+        padding: 0.75rem;
+      }
+      .proposal-paper {
+        padding: 1.75rem 1.25rem;
+      }
+    }
+
+    /* Estructura Interior de la Propuesta */
+    .prop-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid #f1f5f9;
+      margin-bottom: 2.5rem;
+      gap: 1.5rem;
+    }
+
+    .prop-author-info h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .prop-author-info p.role {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 0.15rem;
+    }
+
+    .prop-author-meta {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .prop-meta-badge {
+      text-align: right;
+    }
+
+    .prop-code {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-full);
+      margin-bottom: 0.4rem;
+    }
+
+    .prop-dates {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .prop-hero {
+      margin-bottom: 2.5rem;
+    }
+
+    .prop-tagline {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    .prop-title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .prop-client-line {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .prop-client-line strong {
+      color: var(--text-main);
+    }
+
+    /* Secciones de la propuesta */
+    .prop-section {
+      margin-bottom: 2.25rem;
+    }
+
+    .prop-section-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .prop-section-heading .num {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+    }
+
+    .prop-box {
+      background: var(--bg-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      border-left: 3px solid var(--accent);
+    }
+
+    .prop-pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 0.85rem;
+    }
+
+    .pillar-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+    }
+
+    .pillar-card h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .pillar-card p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* ==========================================================================
+       ESTILOS DEL SISTEMA DE COLORES Y TIPOGRAFÍAS EN LA PROPUESTA
+       ========================================================================== */
+    .art-direction-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .art-direction-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-main);
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Paleta de Color Visual en Propuesta */
+    .prop-palette-preview {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.65rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .prop-color-card {
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .prop-color-chip {
+      height: 48px;
+      width: 100%;
+      position: relative;
+    }
+
+    .prop-color-info {
+      padding: 0.45rem 0.5rem;
+      text-align: center;
+    }
+
+    .prop-color-name {
+      font-size: 0.725rem;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .prop-color-hex {
+      font-family: var(--font-mono);
+      font-size: 0.675rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    /* Emparejamiento Tipográfico Refinado con Frase Clara */
+    .typography-pairing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 640px) {
+      .typography-pairing-grid {
+        grid-template-columns: 1fr;
+      }
+      .prop-palette-preview {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .type-card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .type-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .type-role-badge {
+      font-size: 0.675rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+    }
+
+    .type-specimen-phrase {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--text-main);
+      margin-bottom: 0.75rem;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+    }
+
+    .type-specimen-phrase.body-phrase {
+      font-size: 0.925rem;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--text-secondary);
+    }
+
+    .type-footer-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.5rem;
+      border-top: 1px dashed var(--border-color);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .type-font-name-highlight {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .type-rationale-box {
+      margin-top: 0.85rem;
+      padding: 0.75rem 1rem;
+      background: #f8fafc;
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* Entregables en la propuesta */
+    .deliverables-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+    }
+
+    .deliverable-card-view {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+    }
+
+    .del-check {
+      width: 20px;
+      height: 20px;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+
+    .del-content h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .del-content p {
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+      margin-top: 0.15rem;
+    }
+
+    /* Fases y Cronograma */
+    .timeline-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .timeline-phase {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.85rem;
+      position: relative;
+    }
+
+    .timeline-phase .phase-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-phase h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .timeline-phase .duration {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Tabla de Inversión */
+    .investment-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+
+    .investment-table th {
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .investment-table td {
+      padding: 0.85rem;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.875rem;
+    }
+
+    .investment-table tr.total-row td {
+      border-bottom: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text-main);
+      padding-top: 1rem;
+      border-top: 2px solid var(--text-main);
+    }
+
+    .investment-note {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+      font-size: 0.825rem;
+      color: #92400e;
+      margin-top: 1rem;
+    }
+
+    /* Términos y Firma */
+    .terms-list {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      padding-left: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .terms-list li {
+      margin-bottom: 0.35rem;
+    }
+
+    .signatures-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+    }
+
+    .sig-box {
+      border-top: 1px solid #cbd5e1;
+      padding-top: 0.75rem;
+    }
+
+    .sig-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+
+    .sig-role {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0f172a;
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s ease;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Modo Presentación Zen */
+    body.presentation-mode .top-header,
+    body.presentation-mode .panel-editor,
+    body.presentation-mode .mobile-view-tabs {
+      display: none !important;
+    }
+
+    body.presentation-mode .app-container {
+      grid-template-columns: 1fr;
+      height: 100vh;
+    }
+
+    body.presentation-mode .panel-preview {
+      background: #0f172a;
+      padding: 2rem;
+    }
+
+    body.presentation-mode .proposal-paper {
+      margin: 0 auto;
+    }
+
+    .exit-presentation-btn {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(8px);
+      color: #0f172a;
+      border: 1px solid rgba(0,0,0,0.1);
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-lg);
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    body.presentation-mode .exit-presentation-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ==========================================================================
+       ESTILOS DE IMPRESIÓN Y EXPORTACIÓN A PDF
+       ========================================================================== */
+    @media print {
+      @page {
+        margin: 1.2cm;
+        size: A4 portrait;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+
+      .top-header,
+      .panel-editor,
+      .mobile-view-tabs,
+      .toast,
+      .exit-presentation-btn {
+        display: none !important;
+      }
+
+      .app-container {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .panel-preview {
+        background: transparent !important;
+        padding: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .proposal-paper {
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+        min-height: auto !important;
+      }
+
+      .prop-box, .pillar-card, .art-direction-card, .deliverable-card-view, .timeline-phase {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .signatures-block {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Botón Flotante para Salir de Modo Presentación -->
+  <button class="exit-presentation-btn" id="btnExitPres" onclick="togglePresentationMode()">
+    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    Salir de Modo Presentación (Esc)
+  </button>
+
+  <!-- BARRA SUPERIOR -->
+  <header class="top-header">
+    <div class="brand-group">
+      <div class="logo-badge">JS</div>
+      <div class="brand-title">
+        <h1>Jika Studio <span>Jesika Bustos</span></h1>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- Selector de Casos de Ejemplo -->
+      <select class="select-dropdown" id="exampleSelector" onchange="loadPresetExample(this.value)" title="Cargar un caso de estudio real">
+        <option value="" disabled selected>📂 Cargar Ejemplo Real...</option>
+        <option value="ex_branding">1. Branding & Sistema Visual (Origen Botánico)</option>
+        <option value="ex_marketing">2. Campaña & Redes Sociales (Aura Eco)</option>
+        <option value="ex_editorial">3. Rediseño Editorial & Guía (Revista Vórtice)</option>
+      </select>
+
+      <!-- Selector de Acento Cromático de la Propuesta -->
+      <select class="select-dropdown" id="themeSelector" onchange="changeTheme(this.value)" title="Color de acento de la propuesta">
+        <option value="default">🔵 Azul Pro</option>
+        <option value="indigo">🟣 Índigo Creativo</option>
+        <option value="emerald">🟢 Verde Botánico</option>
+        <option value="ochre">🟡 Ocre Editorial</option>
+        <option value="rose">🔴 Terracota / Rose</option>
+        <option value="charcoal">⚫ Carbón Minimal</option>
+      </select>
+
+      <button class="btn btn-magic" onclick="generateSmartProposal()" title="Genera estrategia, colores, tipografías y entregables según el brief">
+        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        ✨ Generar con IA
+      </button>
+
+      <button class="btn" onclick="copyMarkdownSummary()" title="Copiar propuesta formateada para Notion, Correo o WhatsApp">
+        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+        Copiar Texto
+      </button>
+
+      <button class="btn" onclick="togglePresentationMode()" title="Ver en pantalla completa limpia sin controles para mostrar al cliente">
+        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+        Presentación
+      </button>
+
+      <button class="btn btn-primary" onclick="printProposal()" title="Imprimir o Guardar como PDF de alta calidad">
+        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        PDF / Imprimir
+      </button>
+    </div>
+  </header>
+
+  <!-- PESTAÑAS MÓVILES -->
+  <div class="mobile-view-tabs">
+    <button class="tab-btn active" id="tabBtnEditor" onclick="switchMobileTab('editor')">✏️ Editor & Brief</button>
+    <button class="tab-btn" id="tabBtnPreview" onclick="switchMobileTab('preview')">👁️ Propuesta en Vivo</button>
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL SPLIT -->
+  <main class="app-container">
+    
+    <!-- ==========================================================================
+         PANEL IZQUIERDO: CONFIGURADOR Y EDITOR
+         ========================================================================== -->
+    <aside class="panel-editor" id="panelEditor">
+      
+      <!-- 0. Datos del Diseñador / Perfil -->
+      <section class="editor-section">
+        <div class="section-header">
+          <span class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            Tus Datos Profesionales
+          </span>
+          <span class="badge-pill">Firma</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="authorName">Tu Nombre</label>
+            <input type="text" id="authorName" class="form-input" value="Jesika Bustos" oninput="updateProposal()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="authorRole">Especialidad / Título</label>
+            <input type="text" id="authorRole" class="form-input" value="Integradora de contenidos digitales" oninput="updateProposal()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="authorEmail">Correo Electrónico</label>
+            <input type="email" id="authorEmail" class="form-input" value="jikaa9411@gmail.com" oninput="updateProposal()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="authorPhone">Teléfono / WhatsApp</label>
+            <input type="text" id="authorPhone" class="form-input" value="+57 3214768026" oninput="updateProposal()">
+          </div>
+        </div>
+      </section>
+
+      <!-- 1. Datos del Cliente y Proyecto -->
+      <section class="editor-section">
+        <div class="section-header">
+          <span class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            Cliente y Proyecto
+          </span>
+          <span class="badge-pill">General</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="clientName">Persona de Contacto</label>
+            <input type="text" id="clientName" class="form-input" placeholder="Ej: Carlos Mendoza" oninput="updateProposal()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="clientCompany">Marca / Empresa</label>
+            <input type="text" id="clientCompany" class="form-input" placeholder="Ej: Origen Botánico" oninput="updateProposal()">
+          </div>
+          <div class="form-group span-2">
+            <label class="form-label" for="projectTitle">Título de la Propuesta</label>
+            <input type="text" id="projectTitle" class="form-input" placeholder="Ej: Propuesta de Identidad Visual & Sistema de Marca" oninput="updateProposal()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="proposalCode">Código de Referencia</label>
+            <input type="text" id="proposalCode" class="form-input" value="PROP-2026-001" oninput="updateProposal()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="proposalDate">Fecha de Emisión</label>
+            <input type="date" id="proposalDate" class="form-input" oninput="updateProposal()">
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Brief y Diagnóstico -->
+      <section class="editor-section">
+        <div class="section-header">
+          <span class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Brief & Filtro de Diseño
+          </span>
+          <span class="badge-pill">Estrategia</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="designType">Disciplina Principal</label>
+            <select id="designType" class="form-select" onchange="onBriefChange()">
+              <option value="branding">Identidad Visual & Branding</option>
+              <option value="marketing">Campaña Publicitaria & Redes Sociales</option>
+              <option value="editorial">Diseño Editorial & Publicaciones</option>
+              <option value="design_system">Sistema de Diseño & Manual Gráfico</option>
+              <option value="comprehensive">Integración de Contenidos & Gráfica Digital</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="coreObjective">¿Qué busca solucionar?</label>
+            <select id="coreObjective" class="form-select" onchange="onBriefChange()">
+              <option value="launch">Lanzamiento de Marca desde Cero</option>
+              <option value="repositioning">Reposicionamiento / Imagen más Premium</option>
+              <option value="consistency">Falta de Coherencia Visual & Desorden Gráfico</option>
+              <option value="conversion">Aumentar Ventas, Interacción y Reconocimiento</option>
+            </select>
+          </div>
+          <div class="form-group span-2">
+            <label class="form-label" for="styleVibe">Personalidad / Estilo Visual Deseado</label>
+            <select id="styleVibe" class="form-select" onchange="suggestPaletteByVibe(this.value)">
+              <option value="organic">🌿 Orgánico, Botánico & Cálido</option>
+              <option value="sophisticated">✨ Sofisticado, Editorial & Atemporal</option>
+              <option value="vibrant">⚡ Dinámico, Vibrante & Juvenil</option>
+              <option value="minimalist">🕊️ Minimalista, Neutro & Limpio</option>
+              <option value="tech">🚀 Tecnológico, Moderno & Audaz</option>
+              <option value="corporate">🏛️ Institucional, Confiable & Sólido</option>
+            </select>
+          </div>
+          <div class="form-group span-2">
+            <label class="form-label" for="briefAudience">Público Objetivo / Cliente Ideal</label>
+            <input type="text" id="briefAudience" class="form-input" placeholder="Ej: Jóvenes profesionales de 25 a 40 años amantes del café de especialidad" oninput="updateProposal()">
+          </div>
+          <div class="form-group span-2">
+            <label class="form-label" for="briefChallenge">Situación Actual y Desafío del Cliente</label>
+            <textarea id="briefChallenge" class="form-textarea" placeholder="Describe qué problema tiene el cliente actualmente..." oninput="updateProposal()"></textarea>
+          </div>
+          <div class="form-group span-2">
+            <label class="form-label" for="creativeApproach">Concepto Visual y Enfoque Estratégico</label>
+            <textarea id="creativeApproach" class="form-textarea" placeholder="Estrategia creativa propuesta..." oninput="updateProposal()"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2.5. Recomendación de Colores y Tipografías -->
+      <section class="editor-section">
+        <div class="section-header">
+          <span class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+            Colores & Tipografías Recomendadas
+          </span>
+          <button class="btn btn-sm" onclick="randomizePalette()" title="Generar otra combinación de colores">
+            🎲 Nueva Paleta
+          </button>
+        </div>
+
+        <!-- Editor de Paleta de 5 Colores -->
+        <div class="form-group">
+          <label class="form-label">Paleta Cromática Sugerida (Haz clic para editar cada color):</label>
+          <div class="color-swatches-editor" id="swatchesEditor">
+            <!-- 5 Swatches generados dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Editor de Tipografías -->
+        <div class="form-grid" style="margin-top: 0.85rem;">
+          <div class="form-group">
+            <label class="form-label" for="headingFont">Tipografía de Título / Display</label>
+            <select id="headingFont" class="form-select" onchange="onTypographyChange()">
+              <option value="Cormorant Garamond">Cormorant Garamond (Serif Elegante)</option>
+              <option value="Playfair Display">Playfair Display (Editorial Clásica)</option>
+              <option value="Fraunces">Fraunces (Vintage Contemporánea)</option>
+              <option value="Syne">Syne (Display Vanguardista)</option>
+              <option value="Outfit">Outfit (Sans Geométrica Limpia)</option>
+              <option value="Montserrat">Montserrat (Impacto Publicitario)</option>
+              <option value="Plus Jakarta Sans">Plus Jakarta Sans (Moderna y Neutra)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bodyFont">Tipografía de Cuerpo / Lectura</label>
+            <select id="bodyFont" class="form-select" onchange="onTypographyChange()">
+              <option value="Plus Jakarta Sans">Plus Jakarta Sans (Limpia & Digital)</option>
+              <option value="Inter">Inter (Máxima Legibilidad en UI)</option>
+              <option value="DM Sans">DM Sans (Estructurada & Moderna)</option>
+              <option value="Work Sans">Work Sans (Amigable & Editorial)</option>
+            </select>
+          </div>
+          <div class="form-group span-2">
+            <label class="form-label" for="displayPhrase">Frase de Muestra (Titular)</label>
+            <input type="text" id="displayPhrase" class="form-input" value="Diseño con propósito, carácter y visión estratégica" oninput="updateProposal()">
+          </div>
+          <div class="form-group span-2">
+            <label class="form-label" for="bodyPhrase">Frase de Muestra (Cuerpo de Texto)</label>
+            <input type="text" id="bodyPhrase" class="form-input" value="Una tipografía estructurada para garantizar lectura fluida, clara y accesible en cualquier soporte." oninput="updateProposal()">
+          </div>
+          <div class="form-group span-2">
+            <label class="form-label" for="fontRationale">Justificación Visual de la Elección</label>
+            <input type="text" id="fontRationale" class="form-input" placeholder="Razón por la cual estas fuentes y colores funcionan para este cliente..." oninput="updateProposal()">
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Entregables y Alcance -->
+      <section class="editor-section">
+        <div class="section-header">
+          <span class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Entregables Incluidos
+          </span>
+          <button class="btn btn-icon" onclick="addDeliverable()" title="Agregar nuevo entregable">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Añadir
+          </button>
+        </div>
+        <div id="deliverablesEditorList">
+          <!-- Items generados dinámicamente -->
+        </div>
+      </section>
+
+      <!-- 4. Cronograma por Fases -->
+      <section class="editor-section">
+        <div class="section-header">
+          <span class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Cronograma y Fases
+          </span>
+          <span class="badge-pill">Tiempos</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="phase1">Fase 1: Diagnóstico & Brief</label>
+            <input type="text" id="phase1" class="form-input" value="Semana 1 (Descubrimiento y Benchmarking)" oninput="updateProposal()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="phase2">Fase 2: Exploración Creativa</label>
+            <input type="text" id="phase2" class="form-input" value="Semana 2 (Rutas visuales y Moodboard)" oninput="updateProposal()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="phase3">Fase 3: Desarrollo y Ajustes</label>
+            <input type="text" id="phase3" class="form-input" value="Semana 3 (Refinamiento y Aplicaciones)" oninput="updateProposal()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="phase4">Fase 4: Entrega Final</label>
+            <input type="text" id="phase4" class="form-input" value="Semana 4 (Archivos master y Guías)" oninput="updateProposal()">
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Inversión y Condiciones -->
+      <section class="editor-section">
+        <div class="section-header">
+          <span class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Inversión y Presupuesto
+          </span>
+          <span class="badge-pill">Comercial</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="currencySymbol">Moneda</label>
+            <select id="currencySymbol" class="form-select" onchange="updateProposal()">
+              <option value="COP $">COP $ (Pesos Colombianos)</option>
+              <option value="USD $">USD $ (Dólares)</option>
+              <option value="EUR €">EUR € (Euros)</option>
+              <option value="MXN $">MXN $ (Pesos Mexicanos)</option>
+              <option value="ARS $">ARS $ (Pesos Argentinos)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="investmentAmount">Monto Total de Inversión</label>
+            <input type="text" id="investmentAmount" class="form-input" placeholder="Ej: 2.500.000" oninput="updateProposal()">
+          </div>
+          <div class="form-group span-2">
+            <label class="form-label" for="paymentTerms">Esquema de Pago</label>
+            <input type="text" id="paymentTerms" class="form-input" value="50% de anticipo al inicio y 50% contra entrega de archivos finales" oninput="updateProposal()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="revisionsIncluded">Rondas de Revisión</label>
+            <input type="text" id="revisionsIncluded" class="form-input" value="2 rondas de ajustes incluidas" oninput="updateProposal()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="validityDays">Validez de la Oferta</label>
+            <input type="text" id="validityDays" class="form-input" value="15 días hábiles" oninput="updateProposal()">
+          </div>
+        </div>
+      </section>
+
+      <!-- Botón de Restablecer -->
+      <div style="padding-bottom: 2rem; display: flex; justify-content: flex-end;">
+        <button class="btn" style="color: #b91c1c; border-color: #fecaca;" onclick="resetFormToBlank()">
+          🗑️ Limpiar y Nueva Propuesta
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- ==========================================================================
+         PANEL DERECHO: VISTA PREVIA MAQUETADA DE LA PROPUESTA (HOJA EDITORIAL)
+         ========================================================================== -->
+    <section class="panel-preview" id="panelPreview">
+      
+      <div class="proposal-paper" id="proposalPaper">
+        
+        <!-- Encabezado de la Propuesta -->
+        <header class="prop-header">
+          <div class="prop-author-info">
+            <h2 id="viewAuthorName">Jesika Bustos</h2>
+            <p class="role" id="viewAuthorRole">Integradora de contenidos digitales</p>
+            <div class="prop-author-meta">
+              <span id="viewAuthorEmail">jikaa9411@gmail.com</span> • <span id="viewAuthorPhone">+57 3214768026</span>
+            </div>
+          </div>
+
+          <div class="prop-meta-badge">
+            <div class="prop-code" id="viewProposalCode">PROP-2026-001</div>
+            <div class="prop-dates">
+              <div><strong>Fecha:</strong> <span id="viewProposalDate">15 de Agosto, 2026</span></div>
+              <div><strong>Validez:</strong> <span id="viewValidity">15 días hábiles</span></div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Bloque Hero del Proyecto -->
+        <div class="prop-hero">
+          <div class="prop-tagline">Propuesta de Diseño & Estrategia — Jika Studio</div>
+          <h1 class="prop-title" id="viewProjectTitle">Propuesta de Identidad Visual & Sistema de Marca</h1>
+          <p class="prop-client-line">Preparado exclusivamente para: <strong id="viewClientCompany">Origen Botánico</strong> (<span id="viewClientName">Carlos Mendoza</span>)</p>
+        </div>
+
+        <!-- 01. Diagnóstico & Desafío -->
+        <div class="prop-section">
+          <h3 class="prop-section-heading">
+            <span class="num">01.</span> Diagnóstico & Oportunidad
+          </h3>
+          <div class="prop-box" id="viewBriefChallenge">
+            El cliente busca consolidar su presencia en el mercado diferenciándose de competidores genéricos mediante una identidad visual que transmita sofisticación artesanal y confiabilidad.
+          </div>
+        </div>
+
+        <!-- 02. Estrategia & Concepto Creativo -->
+        <div class="prop-section">
+          <h3 class="prop-section-heading">
+            <span class="num">02.</span> Estrategia Creativa & Dirección Visual
+          </h3>
+          <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem;" id="viewCreativeApproach">
+            Diseño centrado en la coherencia cross-media: estructurar un sistema modular y versátil que hable el idioma del público objetivo.
+          </p>
+          
+          <div class="prop-pillars-grid" id="viewPillarsContainer">
+            <div class="pillar-card">
+              <h4>🎯 Público Objetivo</h4>
+              <p id="viewAudience">Profesionales y entusiastas del café de especialidad.</p>
+            </div>
+            <div class="pillar-card">
+              <h4>✨ Tono y Personalidad</h4>
+              <p id="viewTone">Orgánico, refinado, cálido y contemporáneo.</p>
+            </div>
+            <div class="pillar-card">
+              <h4>🚀 Impacto Esperado</h4>
+              <p id="viewImpact">Incrementar el valor percibido y consistencia en todos los puntos de contacto.</p>
+            </div>
+          </div>
+
+          <!-- BLOQUE DE DIRECCIÓN VISUAL: COLORES Y TIPOGRAFÍAS -->
+          <div class="art-direction-card">
+            <div class="art-direction-title">
+              <span>🎨 Dirección Visual Propuesta</span>
+              <span style="font-size: 0.7rem; font-weight: 600; color: var(--accent);">Paleta & Tipografías</span>
+            </div>
+
+            <!-- Muestras de la Paleta Cromática -->
+            <div class="prop-palette-preview" id="viewPalettePreview">
+              <!-- Swatches generados dinámicamente -->
+            </div>
+
+            <!-- Sistema Tipográfico Sugerido con Muestra de Frase Clara -->
+            <div class="typography-pairing-grid">
+              <div class="type-card">
+                <div class="type-header">
+                  <span class="type-role-badge">Titular / Display</span>
+                  <span class="badge-pill" id="viewDisplayName">Cormorant Garamond</span>
+                </div>
+                <div class="type-specimen-phrase" id="viewDisplaySpecimen" style="font-family: 'Cormorant Garamond', Georgia, serif;">
+                  “Diseño con carácter, elegancia y visión estratégica”
+                </div>
+                <div class="type-footer-meta">
+                  <span>Uso: Encabezados y Logotipos</span>
+                  <span class="type-font-name-highlight" id="viewDisplayMeta">Display / Bold</span>
+                </div>
+              </div>
+
+              <div class="type-card">
+                <div class="type-header">
+                  <span class="type-role-badge">Cuerpo / Lectura</span>
+                  <span class="badge-pill" id="viewBodyName">Plus Jakarta Sans</span>
+                </div>
+                <div class="type-specimen-phrase body-phrase" id="viewBodySpecimen" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                  “Una tipografía estructurada para garantizar lectura fluida, clara y accesible en cualquier soporte.”
+                </div>
+                <div class="type-footer-meta">
+                  <span>Uso: Párrafos y Canales Digitales</span>
+                  <span class="type-font-name-highlight" id="viewBodyMeta">Texto / Regular</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="type-rationale-box" id="viewFontRationale">
+              💡 <strong>Criterio de Selección:</strong> La combinación equilibra la calidez y distinción artesanal con la funcionalidad contemporánea requerida por el proyecto.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 03. Alcance de Entregables -->
+        <div class="prop-section">
+          <h3 class="prop-section-heading">
+            <span class="num">03.</span> Alcance de Entregables
+          </h3>
+          <div class="deliverables-grid" id="viewDeliverablesList">
+            <!-- Entregables renderizados dinámicamente -->
+          </div>
+        </div>
+
+        <!-- 04. Cronograma de Trabajo -->
+        <div class="prop-section">
+          <h3 class="prop-section-heading">
+            <span class="num">04.</span> Cronograma por Fases
+          </h3>
+          <div class="timeline-list">
+            <div class="timeline-phase">
+              <div class="phase-badge">Fase 1</div>
+              <h4>Diagnóstico</h4>
+              <div class="duration" id="viewPhase1">Semana 1</div>
+            </div>
+            <div class="timeline-phase">
+              <div class="phase-badge">Fase 2</div>
+              <h4>Concepto</h4>
+              <div class="duration" id="viewPhase2">Semana 2</div>
+            </div>
+            <div class="timeline-phase">
+              <div class="phase-badge">Fase 3</div>
+              <h4>Desarrollo</h4>
+              <div class="duration" id="viewPhase3">Semana 3</div>
+            </div>
+            <div class="timeline-phase">
+              <div class="phase-badge">Fase 4</div>
+              <h4>Entrega Master</h4>
+              <div class="duration" id="viewPhase4">Semana 4</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 05. Inversión Económica -->
+        <div class="prop-section">
+          <h3 class="prop-section-heading">
+            <span class="num">05.</span> Inversión y Modalidades de Pago
+          </h3>
+          <table class="investment-table">
+            <thead>
+              <tr>
+                <th>Concepto / Alcance</th>
+                <th style="text-align: right;">Total Estimado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong id="viewTableConcept">Desarrollo integral de propuesta de diseño y contenidos</strong>
+                  <div style="font-size: 0.775rem; color: var(--text-muted); margin-top: 0.2rem;" id="viewTableSubtext">
+                    Incluye todas las fases, entregables descritos y archivos fuente editables.
+                  </div>
+                </td>
+                <td style="text-align: right; font-weight: 600;" id="viewTableAmount">COP $ 2.500.000</td>
+              </tr>
+              <tr class="total-row">
+                <td>Inversión Total</td>
+                <td style="text-align: right; color: var(--accent);" id="viewTotalAmount">COP $ 2.500.000</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="investment-note">
+            💳 <strong>Condiciones de Pago:</strong> <span id="viewPaymentTerms">50% de anticipo al inicio y 50% contra entrega de archivos finales</span>. Incluye <span id="viewRevisions">2 rondas de ajustes</span>.
+          </div>
+        </div>
+
+        <!-- 06. Términos y Aprobación -->
+        <div class="prop-section">
+          <h3 class="prop-section-heading">
+            <span class="num">06.</span> Términos y Próximos Pasos
+          </h3>
+          <ul class="terms-list">
+            <li><strong>Cesión de Derechos:</strong> Los derechos de uso sobre los entregables finales serán transferidos al cliente una vez liquidado el 100% de la inversión.</li>
+            <li><strong>Rondas de Ajustes:</strong> Las revisiones contempladas se enfocan en pulir las opciones presentadas dentro del alcance definido en el brief inicial.</li>
+            <li><strong>Archivos Finales:</strong> Se suministrarán formatos listos para producción e impresión (PDF vector, AI/Figma, PNG transparentes, JPG alta resolución).</li>
+          </ul>
+
+          <!-- Firmas / Aprobación -->
+          <div class="signatures-block">
+            <div class="sig-box">
+              <div class="sig-name" id="sigAuthorName">Jesika Bustos</div>
+              <div class="sig-role" id="sigAuthorRole">Integradora de contenidos digitales</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Jika Studio</div>
+            </div>
+            <div class="sig-box">
+              <div class="sig-name" id="sigClientName">Carlos Mendoza</div>
+              <div class="sig-role" id="sigClientCompany">Origen Botánico</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Aprobación y firma del cliente</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Notificación Toast -->
+  <div class="toast" id="toastNotification">
+    <svg width="18" height="18" fill="none" stroke="#10b981" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <span id="toastMsg">Acción completada con éxito</span>
+  </div>
+
+  <!-- ==========================================================================
+       LÓGICA JAVASCRIPT VANILLA AUTOCONTENIDA
+       ========================================================================== -->
+  <script>
+    // ESTADO GLOBAL DE LA APLICACIÓN
+    const STORAGE_KEY = 'jikastudio_proposals_v2';
+
+    let appState = {
+      theme: 'default',
+      author: {
+        name: 'Jesika Bustos',
+        role: 'Integradora de contenidos digitales',
+        email: 'jikaa9411@gmail.com',
+        phone: '+57 3214768026'
+      },
+      client: {
+        name: 'Carlos Mendoza',
+        company: 'Origen Botánico',
+        projectTitle: 'Propuesta de Identidad Visual & Sistema de Marca',
+        code: 'PROP-2026-001',
+        date: new Date().toISOString().split('T')[0]
+      },
+      strategy: {
+        designType: 'branding',
+        objective: 'repositioning',
+        styleVibe: 'organic',
+        audience: 'Jóvenes profesionales de 25 a 40 años amantes del café de especialidad y diseño.',
+        challenge: 'La marca cuenta con un excelente producto artesanal, pero su imagen visual actual es genérica y no refleja la calidad premium de sus procesos, perdiendo ventas frente a marcas más estructuradas.',
+        approach: 'Construir un universo gráfico coherente, cálido y sofisticado que eleve el valor percibido del producto y facilite su reconocimiento instantáneo en tienda física y canales digitales.'
+      },
+      artDirection: {
+        palette: [
+          { role: 'Primario', name: 'Verde Bosque', hex: '#1e3a2f' },
+          { role: 'Secundario', name: 'Ocre Tostado', hex: '#c68b59' },
+          { role: 'Fondo / Base', name: 'Arena Lino', hex: '#f4efea' },
+          { role: 'Texto / Contraste', name: 'Espresso', hex: '#1a1715' },
+          { role: 'Acento', name: 'Salvia Botánico', hex: '#8fa89b' }
+        ],
+        headingFont: 'Cormorant Garamond',
+        bodyFont: 'Plus Jakarta Sans',
+        displayPhrase: 'Diseño con carácter, elegancia y visión estratégica',
+        bodyPhrase: 'Una tipografía estructurada para garantizar lectura fluida, clara y accesible en cualquier soporte.',
+        fontRationale: 'Cormorant Garamond aporta la elegancia artesanal y orgánica que conecta con el café de origen, mientras que Plus Jakarta Sans garantiza claridad técnica en empaques y canales digitales.'
+      },
+      deliverables: [
+        { title: 'Identidad Visual Central', desc: 'Logotipo principal, variantes secundarias, isotipo, paleta cromática y tipografías corporativas.' },
+        { title: 'Manual de Identidad & Guía de Estilo', desc: 'Normas de uso, aplicaciones correctas e incorrectas, retículas y especificaciones técnicas.' },
+        { title: 'Kit de Empaque & Packaging', desc: 'Diseño de etiquetas para bolsas de café de 250g/500g y sellos de garantía.' },
+        { title: 'Plantillas para Redes Sociales', desc: 'Pack de 12 plantillas editables en Figma/Canva para Instagram (Posts & Stories).' },
+        { title: 'Papelería y Tarjetería', desc: 'Diseño de tarjetas de presentación, hojas membretadas y notas de agradecimiento.' }
+      ],
+      timeline: {
+        phase1: 'Semana 1 (Descubrimiento y Benchmarking)',
+        phase2: 'Semana 2 (Rutas visuales y Moodboard)',
+        phase3: 'Semana 3 (Refinamiento y Aplicaciones)',
+        phase4: 'Semana 4 (Archivos master y Guías)'
+      },
+      commercial: {
+        currency: 'COP $',
+        amount: '2.500.000',
+        paymentTerms: '50% de anticipo al inicio y 50% contra entrega de archivos finales',
+        revisions: '2 rondas de ajustes incluidas',
+        validity: '15 días hábiles'
+      }
+    };
+
+    // CATÁLOGO DE PALETAS Y TIPOGRAFÍAS POR ESTILO / VIBE
+    const STYLE_PRESETS = {
+      organic: {
+        name: '🌿 Orgánico, Botánico & Cálido',
+        headingFont: 'Cormorant Garamond',
+        bodyFont: 'Plus Jakarta Sans',
+        displayPhrase: 'Sabor artesanal, origen y sofisticación botánica',
+        bodyPhrase: 'Información clara y legible diseñada para empaques de café y plataformas digitales.',
+        rationale: 'Equilibra el encanto y textura de lo artesanal con una lectura impecable en soportes físicos y digitales.',
+        palette: [
+          { role: 'Primario', name: 'Verde Bosque', hex: '#1e3a2f' },
+          { role: 'Secundario', name: 'Ocre Tostado', hex: '#c68b59' },
+          { role: 'Fondo / Base', name: 'Arena Lino', hex: '#f4efea' },
+          { role: 'Texto / Contraste', name: 'Espresso', hex: '#1a1715' },
+          { role: 'Acento', name: 'Salvia Botánico', hex: '#8fa89b' }
+        ]
+      },
+      sophisticated: {
+        name: '✨ Sofisticado, Editorial & Atemporal',
+        headingFont: 'Playfair Display',
+        bodyFont: 'Inter',
+        displayPhrase: 'Moda atemporal con conciencia sostenible',
+        bodyPhrase: 'Contenido ágil y persuasivo optimizado para anuncios, historias y catálogo interactivo.',
+        rationale: 'Tipografía con modulación clásica de revista de alta gama combinada con una sans geométrica neutral para dar protagonismo al contenido.',
+        palette: [
+          { role: 'Primario', name: 'Azul Noche', hex: '#0f172a' },
+          { role: 'Secundario', name: 'Champagne / Oro', hex: '#d4af37' },
+          { role: 'Fondo / Base', name: 'Marfil Suave', hex: '#faf9f6' },
+          { role: 'Texto / Contraste', name: 'Carbón', hex: '#1e293b' },
+          { role: 'Acento', name: 'Terracota', hex: '#b45309' }
+        ]
+      },
+      vibrant: {
+        name: '⚡ Dinámico, Vibrante & Juvenil',
+        headingFont: 'Syne',
+        bodyFont: 'Plus Jakarta Sans',
+        displayPhrase: 'Impacto visual, ritmo y energía de campaña',
+        bodyPhrase: 'Diseñada para retener la atención y provocar interacción instantánea en redes.',
+        rationale: 'Formas tipográficas expresivas y contrastes enérgicos diseñados para captar atención inmediata en redes sociales y piezas de pauta.',
+        palette: [
+          { role: 'Primario', name: 'Índigo Eléctrico', hex: '#4f46e5' },
+          { role: 'Secundario', name: 'Coral Pop', hex: '#f43f5e' },
+          { role: 'Fondo / Base', name: 'Gris Glaciar', hex: '#f8fafc' },
+          { role: 'Texto / Contraste', name: 'Negro Tinta', hex: '#09090b' },
+          { role: 'Acento', name: 'Lima / Neón', hex: '#10b981' }
+        ]
+      },
+      minimalist: {
+        name: '🕊️ Minimalista, Neutro & Limpio',
+        headingFont: 'Outfit',
+        bodyFont: 'Inter',
+        displayPhrase: 'Claridad estructural y pureza geométrica',
+        bodyPhrase: 'Una arquitectura visual sobria que prioriza la legibilidad y la función.',
+        rationale: 'Espacios en blanco generosos, arquitectura tipográfica sans-serif limpia y ausencia de elementos superfluos para comunicar orden y claridad.',
+        palette: [
+          { role: 'Primario', name: 'Antracita', hex: '#27272a' },
+          { role: 'Secundario', name: 'Gris Piedra', hex: '#71717a' },
+          { role: 'Fondo / Base', name: 'Blanco Puro', hex: '#ffffff' },
+          { role: 'Texto / Contraste', name: 'Negro Mate', hex: '#18181b' },
+          { role: 'Acento', name: 'Warm Taupe', hex: '#a1a1aa' }
+        ]
+      },
+      tech: {
+        name: '🚀 Tecnológico, Moderno & Audaz',
+        headingFont: 'Montserrat',
+        bodyFont: 'DM Sans',
+        displayPhrase: 'Innovación digital y arquitectura de producto',
+        bodyPhrase: 'Solidez tipográfica construida para escalar en interfaces web y plataformas modernas.',
+        rationale: 'Tipografías geométricas de construcción sólida y azules tecnológicos que transmiten innovación, seguridad y escalabilidad digital.',
+        palette: [
+          { role: 'Primario', name: 'Azul Cobalto', hex: '#2563eb' },
+          { role: 'Secundario', name: 'Cian Profundo', hex: '#0284c7' },
+          { role: 'Fondo / Base', name: 'Cian Suave', hex: '#f0f9ff' },
+          { role: 'Texto / Contraste', name: 'Azul Medianoche', hex: '#0f172a' },
+          { role: 'Acento', name: 'Violeta Digital', hex: '#7c3aed' }
+        ]
+      },
+      corporate: {
+        name: '🏛️ Institucional, Confiable & Sólido',
+        headingFont: 'Fraunces',
+        bodyFont: 'Work Sans',
+        displayPhrase: 'Cultura, pensamiento crítico y vanguardia visual',
+        bodyPhrase: 'Reticulado editorial impecable para ensayos, entrevistas y columnas de opinión.',
+        rationale: 'Estructura editorial de gran prestigio institucional que refuerza la solidez y reputación de organizaciones consolidadas.',
+        palette: [
+          { role: 'Primario', name: 'Azul Marino', hex: '#1e3a8a' },
+          { role: 'Secundario', name: 'Bronce Noble', hex: '#92400e' },
+          { role: 'Fondo / Base', name: 'Gris Oficina', hex: '#f8fafc' },
+          { role: 'Texto / Contraste', name: 'Pizarra', hex: '#334155' },
+          { role: 'Acento', name: 'Esmeralda', hex: '#047857' }
+        ]
+      }
+    };
+
+    // BANCO DE EJEMPLOS PRECARGADOS
+    const PRESETS = {
+      ex_branding: {
+        theme: 'emerald',
+        client: {
+          name: 'Carlos Mendoza',
+          company: 'Origen Botánico',
+          projectTitle: 'Propuesta de Identidad Visual & Sistema de Marca',
+          code: 'PROP-2026-001',
+          date: new Date().toISOString().split('T')[0]
+        },
+        strategy: {
+          designType: 'branding',
+          objective: 'repositioning',
+          styleVibe: 'organic',
+          audience: 'Consumidores de 25 a 45 años con gusto por experiencias gastronómicas de origen, sostenibilidad y diseño limpio.',
+          challenge: 'La cafetería cuenta con gran afluencia local pero carece de un sistema de marca unificado para lanzar su línea de café empacado a nivel nacional.',
+          approach: 'Crear una identidad visual con aire botánico contemporáneo, inspirada en la flora colombiana y la precisión artesanal del barismo.'
+        },
+        artDirection: {
+          palette: [
+            { role: 'Primario', name: 'Verde Bosque', hex: '#1e3a2f' },
+            { role: 'Secundario', name: 'Ocre Tostado', hex: '#c68b59' },
+            { role: 'Fondo / Base', name: 'Arena Lino', hex: '#f4efea' },
+            { role: 'Texto / Contraste', name: 'Espresso', hex: '#1a1715' },
+            { role: 'Acento', name: 'Salvia Botánico', hex: '#8fa89b' }
+          ],
+          headingFont: 'Cormorant Garamond',
+          bodyFont: 'Plus Jakarta Sans',
+          displayPhrase: 'Sabor artesanal, origen y sofisticación botánica',
+          bodyPhrase: 'Información clara y legible diseñada para empaques de café y plataformas digitales.',
+          fontRationale: 'Cormorant Garamond evoca el linaje botánico y el tostado artesanal, mientras que Plus Jakarta Sans garantiza precisión técnica en empaques y canales digitales.'
+        },
+        deliverables: [
+          { title: 'Identidad Visual Central', desc: 'Isologo, versiones responsive, paleta de color orgánica y sistema tipográfico.' },
+          { title: 'Manual de Marca Digital', desc: 'Documento interactivo con guías de aplicación, contrastes y zonas de seguridad.' },
+          { title: 'Diseño de Empaques y Bolsas', desc: 'Artes finales para empaques de café de especialidad y etiquetas de origen.' },
+          { title: 'Kit de Redes Sociales', desc: '15 plantillas modulares para historias, lanzamientos y carruseles educativos.' },
+          { title: 'Archivos Maestros', desc: 'Entregables vectoriales en AI, SVG, PDF de alta imprenta y formatos digitales optimizados.' }
+        ],
+        timeline: {
+          phase1: 'Semana 1: Investigación y Universo Visual',
+          phase2: 'Semana 2: Presentación de 2 Rutas Creativas',
+          phase3: 'Semana 3: Desarrollo de Empaques y Redes',
+          phase4: 'Semana 4: Exportación de Manual y Master Files'
+        },
+        commercial: {
+          currency: 'COP $',
+          amount: '2.800.000',
+          paymentTerms: '50% anticipo para iniciar y 50% al entregar los archivos finales',
+          revisions: '2 rondas de revisión incluidas',
+          validity: '15 días hábiles'
+        }
+      },
+
+      ex_marketing: {
+        theme: 'rose',
+        client: {
+          name: 'Valentina Restrepo',
+          company: 'Aura Eco Moda',
+          projectTitle: 'Estrategia Visual de Campaña & Contenidos Digitales',
+          code: 'PROP-2026-002',
+          date: new Date().toISOString().split('T')[0]
+        },
+        strategy: {
+          designType: 'marketing',
+          objective: 'launch',
+          styleVibe: 'sophisticated',
+          audience: 'Mujeres y jóvenes conscientes del consumo responsable, interesadas en moda atemporal y estilo de vida sostenible.',
+          challenge: 'Lanzamiento de la nueva colección cápsula de verano sin un concepto de campaña definido ni piezas gráficas para pauta digital.',
+          approach: 'Diseñar una dirección de arte fresca, luminosa y editorial, con narrativas visuales dinámicas diseñadas para maximizar el engagement en Instagram y TikTok.'
+        },
+        artDirection: {
+          palette: [
+            { role: 'Primario', name: 'Terracota Solar', hex: '#d97d64' },
+            { role: 'Secundario', name: 'Oliva Natural', hex: '#5b7065' },
+            { role: 'Fondo / Base', name: 'Algodón Crudo', hex: '#fdfbf7' },
+            { role: 'Texto / Contraste', name: 'Carbón Suave', hex: '#232b2b' },
+            { role: 'Acento', name: 'Rosa Pétalo', hex: '#e5a99b' }
+          ],
+          headingFont: 'Playfair Display',
+          bodyFont: 'Inter',
+          displayPhrase: 'Moda atemporal con conciencia sostenible',
+          bodyPhrase: 'Contenido ágil y persuasivo optimizado para anuncios, historias y catálogo interactivo.',
+          fontRationale: 'Playfair Display aporta el prestigio estético de la moda editorial, contrastando con la versatilidad y dinamismo de Inter en anuncios y pantallas táctiles.'
+        },
+        deliverables: [
+          { title: 'Dirección de Arte de Campaña', desc: 'Concepto visual, guía de estilo para fotografía, paleta de temporada y tratamiento tipográfico.' },
+          { title: 'Pack de Contenido para Redes (30 Piezas)', desc: 'Reels covers, carruseles educativos sobre sostenibilidad y stories interactivas.' },
+          { title: 'Banners para Publicidad Digital (Meta Ads)', desc: 'Kit de 8 formatos optimizados para anuncios de conversión y tráfico web.' },
+          { title: 'Lookbook Digital Interactivo (PDF)', desc: 'Catálogo de la colección con enlaces clicables a la tienda online.' }
+        ],
+        timeline: {
+          phase1: 'Días 1-4: Conceptualización y Moodboard de Campaña',
+          phase2: 'Días 5-10: Maquetación de Piezas Gráficas y Formatos Ads',
+          phase3: 'Días 11-15: Revisión, Ajustes y Entrega de Assets Editables'
+        },
+        commercial: {
+          currency: 'COP $',
+          amount: '1.950.000',
+          paymentTerms: '50% anticipo al iniciar y 50% a la entrega del paquete de piezas',
+          revisions: '2 rondas de revisión incluidas',
+          validity: '10 días hábiles'
+        }
+      },
+
+      ex_editorial: {
+        theme: 'ochre',
+        client: {
+          name: 'Julián Arango',
+          company: 'Revista Cultural Vórtice',
+          projectTitle: 'Rediseño Editorial, Retícula y Sistema Maquetación',
+          code: 'PROP-2026-003',
+          date: new Date().toISOString().split('T')[0]
+        },
+        strategy: {
+          designType: 'editorial',
+          objective: 'consistency',
+          styleVibe: 'corporate',
+          audience: 'Lectores apasionados por el arte contemporáneo, literatura, cine y debates culturales de Iberoamérica.',
+          challenge: 'La publicación imprimía con estilos dispares en cada edición, causando confusión en los lectores y retrasos en la imprenta.',
+          approach: 'Estructurar una retícula modular sólida, jerarquías tipográficas elegantes inspiradas en la escuela suiza y plantillas maestras en InDesign/Figma.'
+        },
+        artDirection: {
+          palette: [
+            { role: 'Primario', name: 'Tinta Azul Noche', hex: '#0f172a' },
+            { role: 'Secundario', name: 'Ámbar Tipográfico', hex: '#d97706' },
+            { role: 'Fondo / Base', name: 'Papel Satinado', hex: '#f8fafc' },
+            { role: 'Texto / Contraste', name: 'Gris Neutro', hex: '#475569' },
+            { role: 'Acento', name: 'Rojo Manifiesto', hex: '#dc2626' }
+          ],
+          headingFont: 'Fraunces',
+          bodyFont: 'DM Sans',
+          displayPhrase: 'Cultura, pensamiento crítico y vanguardia visual',
+          bodyPhrase: 'Reticulado editorial impecable para ensayos, entrevistas y columnas de opinión.',
+          fontRationale: 'Fraunces ofrece peso y textura vanguardista para portadas y cabeceras de ensayos, apoyada en DM Sans para una diagramación de lectura fluida.'
+        },
+        deliverables: [
+          { title: 'Sistema de Retícula y Maquetación Base', desc: 'Diseño de retículas de 3 y 4 columnas para artículos, entrevistas y ensayos visuales.' },
+          { title: 'Plantillas Maestras de Portada y Secciones', desc: 'Master templates con estilos de párrafo, carácter y cajas de contenido configuradas.' },
+          { title: 'Guía de Estilo Editorial para Redactores', desc: 'Manual práctico de jerarquías de texto, créditos, pies de foto y notas al pie.' },
+          { title: 'Maquetación de la Edición N° 12 (Piloto)', desc: 'Diagramación completa de 48 páginas lista para pre-prensa e imprenta.' }
+        ],
+        timeline: {
+          phase1: 'Semana 1: Análisis tipográfico y definición de retículas',
+          phase2: 'Semana 2: Diseño de plantillas de portada y pliegos',
+          phase3: 'Semana 3: Diagramación de la edición piloto y ajustes',
+          phase4: 'Semana 4: Pruebas de pre-prensa y entrega de archivos finales'
+        },
+        commercial: {
+          currency: 'COP $',
+          amount: '3.200.000',
+          paymentTerms: '40% al inicio, 30% en entrega de maquetas y 30% con el archivo final de imprenta',
+          revisions: '3 rondas de ajustes incluidas',
+          validity: '20 días hábiles'
+        }
+      }
+    };
+
+    // INICIALIZACIÓN
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedState();
+      bindEvents();
+      renderAll();
+    });
+
+    // Cargar estado desde localStorage si existe
+    function loadSavedState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          appState = { ...appState, ...parsed };
+        }
+      } catch (e) {
+        console.warn('Error loading localStorage data:', e);
+      }
+      populateForm();
+    }
+
+    // Guardar estado en localStorage
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.warn('Error saving to localStorage:', e);
+      }
+    }
+
+    // Llenar inputs del formulario con el estado
+    function populateForm() {
+      // Perfil
+      document.getElementById('authorName').value = appState.author.name;
+      document.getElementById('authorRole').value = appState.author.role;
+      document.getElementById('authorEmail').value = appState.author.email;
+      document.getElementById('authorPhone').value = appState.author.phone;
+
+      // Cliente
+      document.getElementById('clientName').value = appState.client.name;
+      document.getElementById('clientCompany').value = appState.client.company;
+      document.getElementById('projectTitle').value = appState.client.projectTitle;
+      document.getElementById('proposalCode').value = appState.client.code;
+      document.getElementById('proposalDate').value = appState.client.date;
+
+      // Estrategia
+      document.getElementById('designType').value = appState.strategy.designType;
+      document.getElementById('coreObjective').value = appState.strategy.objective;
+      document.getElementById('styleVibe').value = appState.strategy.styleVibe || 'organic';
+      document.getElementById('briefAudience').value = appState.strategy.audience;
+      document.getElementById('briefChallenge').value = appState.strategy.challenge;
+      document.getElementById('creativeApproach').value = appState.strategy.approach;
+
+      // Dirección Visual & Tipografías
+      document.getElementById('headingFont').value = appState.artDirection.headingFont;
+      document.getElementById('bodyFont').value = appState.artDirection.bodyFont;
+      document.getElementById('displayPhrase').value = appState.artDirection.displayPhrase || 'Diseño con propósito, carácter y visión estratégica';
+      document.getElementById('bodyPhrase').value = appState.artDirection.bodyPhrase || 'Una tipografía estructurada para garantizar lectura fluida, clara y accesible en cualquier soporte.';
+      document.getElementById('fontRationale').value = appState.artDirection.fontRationale || '';
+
+      // Fases
+      document.getElementById('phase1').value = appState.timeline.phase1;
+      document.getElementById('phase2').value = appState.timeline.phase2;
+      document.getElementById('phase3').value = appState.timeline.phase3;
+      document.getElementById('phase4').value = appState.timeline.phase4;
+
+      // Comercial
+      document.getElementById('currencySymbol').value = appState.commercial.currency;
+      document.getElementById('investmentAmount').value = appState.commercial.amount;
+      document.getElementById('paymentTerms').value = appState.commercial.paymentTerms;
+      document.getElementById('revisionsIncluded').value = appState.commercial.revisions;
+      document.getElementById('validityDays').value = appState.commercial.validity;
+
+      // Tema
+      document.getElementById('themeSelector').value = appState.theme || 'default';
+      applyTheme(appState.theme || 'default');
+
+      renderSwatchesEditor();
+      renderDeliverablesEditor();
+    }
+
+    // Leer inputs y actualizar estado reactivo
+    function updateProposal() {
+      // Perfil
+      appState.author.name = document.getElementById('authorName').value;
+      appState.author.role = document.getElementById('authorRole').value;
+      appState.author.email = document.getElementById('authorEmail').value;
+      appState.author.phone = document.getElementById('authorPhone').value;
+
+      // Cliente
+      appState.client.name = document.getElementById('clientName').value;
+      appState.client.company = document.getElementById('clientCompany').value;
+      appState.client.projectTitle = document.getElementById('projectTitle').value;
+      appState.client.code = document.getElementById('proposalCode').value;
+      appState.client.date = document.getElementById('proposalDate').value;
+
+      // Estrategia
+      appState.strategy.designType = document.getElementById('designType').value;
+      appState.strategy.objective = document.getElementById('coreObjective').value;
+      appState.strategy.styleVibe = document.getElementById('styleVibe').value;
+      appState.strategy.audience = document.getElementById('briefAudience').value;
+      appState.strategy.challenge = document.getElementById('briefChallenge').value;
+      appState.strategy.approach = document.getElementById('creativeApproach').value;
+
+      // Dirección visual
+      appState.artDirection.headingFont = document.getElementById('headingFont').value;
+      appState.artDirection.bodyFont = document.getElementById('bodyFont').value;
+      appState.artDirection.displayPhrase = document.getElementById('displayPhrase').value;
+      appState.artDirection.bodyPhrase = document.getElementById('bodyPhrase').value;
+      appState.artDirection.fontRationale = document.getElementById('fontRationale').value;
+
+      // Fases
+      appState.timeline.phase1 = document.getElementById('phase1').value;
+      appState.timeline.phase2 = document.getElementById('phase2').value;
+      appState.timeline.phase3 = document.getElementById('phase3').value;
+      appState.timeline.phase4 = document.getElementById('phase4').value;
+
+      // Comercial
+      appState.commercial.currency = document.getElementById('currencySymbol').value;
+      appState.commercial.amount = document.getElementById('investmentAmount').value;
+      appState.commercial.paymentTerms = document.getElementById('paymentTerms').value;
+      appState.commercial.revisions = document.getElementById('revisionsIncluded').value;
+      appState.commercial.validity = document.getElementById('validityDays').value;
+
+      saveState();
+      renderPreview();
+    }
+
+    // Renderizar paleta de colores en el editor
+    function renderSwatchesEditor() {
+      const container = document.getElementById('swatchesEditor');
+      container.innerHTML = '';
+
+      appState.artDirection.palette.forEach((swatch, idx) => {
+        const item = document.createElement('div');
+        item.className = 'swatch-item-edit';
+        item.innerHTML = `
+          <input type="color" class="swatch-color-input" value="${swatch.hex}" onchange="updateSwatchColor(${idx}, this.value)">
+          <div class="swatch-role-label" title="${swatch.name}">${swatch.role}</div>
+          <div class="swatch-hex-val" onclick="copyHex('${swatch.hex}')" title="Copiar ${swatch.hex}">${swatch.hex}</div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function updateSwatchColor(index, newHex) {
+      if (appState.artDirection.palette[index]) {
+        appState.artDirection.palette[index].hex = newHex;
+        saveState();
+        renderSwatchesEditor();
+        renderPreview();
+      }
+    }
+
+    function copyHex(hex) {
+      navigator.clipboard.writeText(hex);
+      showToast(`🎨 Color ${hex} copiado al portapapeles`);
+    }
+
+    function suggestPaletteByVibe(vibeKey) {
+      const preset = STYLE_PRESETS[vibeKey];
+      if (!preset) return;
+
+      appState.artDirection.palette = JSON.parse(JSON.stringify(preset.palette));
+      appState.artDirection.headingFont = preset.headingFont;
+      appState.artDirection.bodyFont = preset.bodyFont;
+      appState.artDirection.displayPhrase = preset.displayPhrase;
+      appState.artDirection.bodyPhrase = preset.bodyPhrase;
+      appState.artDirection.fontRationale = preset.rationale;
+
+      document.getElementById('headingFont').value = preset.headingFont;
+      document.getElementById('bodyFont').value = preset.bodyFont;
+      document.getElementById('displayPhrase').value = preset.displayPhrase;
+      document.getElementById('bodyPhrase').value = preset.bodyPhrase;
+      document.getElementById('fontRationale').value = preset.rationale;
+
+      renderSwatchesEditor();
+      saveState();
+      renderPreview();
+      showToast(`🎨 Aplicada dirección visual: ${preset.name}`);
+    }
+
+    function randomizePalette() {
+      const vibes = Object.keys(STYLE_PRESETS);
+      const randomVibe = vibes[Math.floor(Math.random() * vibes.length)];
+      document.getElementById('styleVibe').value = randomVibe;
+      suggestPaletteByVibe(randomVibe);
+    }
+
+    function onTypographyChange() {
+      appState.artDirection.headingFont = document.getElementById('headingFont').value;
+      appState.artDirection.bodyFont = document.getElementById('bodyFont').value;
+      saveState();
+      renderPreview();
+    }
+
+    function onBriefChange() {
+      updateProposal();
+    }
+
+    // Renderizar la lista de entregables en el panel editor
+    function renderDeliverablesEditor() {
+      const container = document.getElementById('deliverablesEditorList');
+      container.innerHTML = '';
+
+      appState.deliverables.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'deliverable-item';
+        div.innerHTML = `
+          <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
+            <input type="text" value="${escapeHtml(item.title)}" placeholder="Nombre del entregable" oninput="updateDeliverable(${index}, 'title', this.value)">
+            <input type="text" value="${escapeHtml(item.desc)}" placeholder="Detalle / Alcance" style="font-size:0.75rem; color:#64748b;" oninput="updateDeliverable(${index}, 'desc', this.value)">
+          </div>
+          <button class="btn-remove" onclick="removeDeliverable(${index})" title="Eliminar entregable">✕</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function updateDeliverable(index, field, value) {
+      if (appState.deliverables[index]) {
+        appState.deliverables[index][field] = value;
+        saveState();
+        renderPreview();
+      }
+    }
+
+    function addDeliverable() {
+      appState.deliverables.push({
+        title: 'Nuevo Entregable de Diseño',
+        desc: 'Descripción detallada de formatos y especificaciones.'
+      });
+      renderDeliverablesEditor();
+      saveState();
+      renderPreview();
+    }
+
+    function removeDeliverable(index) {
+      appState.deliverables.splice(index, 1);
+      renderDeliverablesEditor();
+      saveState();
+      renderPreview();
+    }
+
+    // Renderizar la hoja de la propuesta
+    function renderPreview() {
+      // Encabezado Diseñador
+      setText('viewAuthorName', appState.author.name || 'Jesika Bustos');
+      setText('viewAuthorRole', appState.author.role || 'Diseñadora Visual');
+      setText('viewAuthorEmail', appState.author.email || 'contacto@email.com');
+      setText('viewAuthorPhone', appState.author.phone || '');
+
+      // Encabezado Metadatos
+      setText('viewProposalCode', appState.client.code || 'PROP-001');
+      setText('viewProposalDate', formatDateSpanish(appState.client.date));
+      setText('viewValidity', appState.commercial.validity || '15 días hábiles');
+
+      // Hero
+      setText('viewProjectTitle', appState.client.projectTitle || 'Propuesta de Diseño');
+      setText('viewClientCompany', appState.client.company || 'Cliente');
+      setText('viewClientName', appState.client.name || 'Contacto');
+
+      // Diagnóstico
+      setText('viewBriefChallenge', appState.strategy.challenge || 'Definición de desafío en desarrollo...');
+
+      // Estrategia y Pilares
+      setText('viewCreativeApproach', appState.strategy.approach || 'Enfoque estratégico en proceso...');
+      setText('viewAudience', appState.strategy.audience || 'Público objetivo clave');
+
+      // Tono e Impacto dinámicos según disciplina
+      const toneMap = {
+        branding: 'Elegante, memorable, consistente y contemporáneo.',
+        marketing: 'Dinámico, persuasivo, ágil y de alto impacto visual.',
+        editorial: 'Estructurado, jerárquico, legible y sofisticado.',
+        design_system: 'Sistemático, escalable, modular y accesible.',
+        comprehensive: 'Integral, estratégico, versátil y orientado a resultados.'
+      };
+      setText('viewTone', toneMap[appState.strategy.designType] || 'Profesional y relevante');
+
+      const impactMap = {
+        launch: 'Generar tracción inmediata, credibilidad y memorabilidad de marca.',
+        repositioning: 'Elevar el valor percibido para justificar precios más altos.',
+        consistency: 'Eliminar el desorden visual y agilizar la producción futura.',
+        conversion: 'Aumentar la interacción, ventas y clics calificados.'
+      };
+      setText('viewImpact', impactMap[appState.strategy.objective] || 'Lograr los objetivos comerciales del cliente.');
+
+      // Renderizar Muestras de la Paleta en la Propuesta
+      const paletteContainer = document.getElementById('viewPalettePreview');
+      paletteContainer.innerHTML = '';
+      appState.artDirection.palette.forEach(swatch => {
+        const card = document.createElement('div');
+        card.className = 'prop-color-card';
+        card.innerHTML = `
+          <div class="prop-color-chip" style="background-color: ${swatch.hex};"></div>
+          <div class="prop-color-info">
+            <div class="prop-color-name">${escapeHtml(swatch.name || swatch.role)}</div>
+            <div class="prop-color-hex">${swatch.hex.toUpperCase()}</div>
+          </div>
+        `;
+        paletteContainer.appendChild(card);
+      });
+
+      // Renderizar Tipografías con Frases de Ejemplo Claras
+      const displayFont = appState.artDirection.headingFont || 'Cormorant Garamond';
+      const bodyFont = appState.artDirection.bodyFont || 'Plus Jakarta Sans';
+      const displayPhrase = appState.artDirection.displayPhrase || 'Diseño con carácter, elegancia y visión estratégica';
+      const bodyPhrase = appState.artDirection.bodyPhrase || 'Una tipografía estructurada para garantizar lectura fluida, clara y accesible en cualquier soporte.';
+
+      setText('viewDisplayName', displayFont);
+      setText('viewBodyName', bodyFont);
+      setText('viewDisplayMeta', 'Display / Titulares');
+      setText('viewBodyMeta', 'Lectura / Párrafos');
+
+      const displaySpecimen = document.getElementById('viewDisplaySpecimen');
+      if (displaySpecimen) {
+        displaySpecimen.textContent = `“${displayPhrase}”`;
+        displaySpecimen.style.fontFamily = `'${displayFont}', Georgia, serif`;
+      }
+
+      const bodySpecimen = document.getElementById('viewBodySpecimen');
+      if (bodySpecimen) {
+        bodySpecimen.textContent = `“${bodyPhrase}”`;
+        bodySpecimen.style.fontFamily = `'${bodyFont}', sans-serif`;
+      }
+
+      setText('viewFontRationale', `💡 Criterio de Selección: ${appState.artDirection.fontRationale || 'Armonía visual equilibrada según las necesidades del brief.'}`);
+
+      // Entregables
+      const delContainer = document.getElementById('viewDeliverablesList');
+      delContainer.innerHTML = '';
+      if (appState.deliverables.length === 0) {
+        delContainer.innerHTML = '<p style="font-size:0.85rem; color:#94a3b8;">No hay entregables agregados todavía.</p>';
+      } else {
+        appState.deliverables.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'deliverable-card-view';
+          card.innerHTML = `
+            <div class="del-check">
+              <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div class="del-content">
+              <h4>${escapeHtml(item.title)}</h4>
+              <p>${escapeHtml(item.desc)}</p>
+            </div>
+          `;
+          delContainer.appendChild(card);
+        });
+      }
+
+      // Fases
+      setText('viewPhase1', appState.timeline.phase1);
+      setText('viewPhase2', appState.timeline.phase2);
+      setText('viewPhase3', appState.timeline.phase3);
+      setText('viewPhase4', appState.timeline.phase4);
+
+      // Inversión
+      const fullAmount = `${appState.commercial.currency} ${appState.commercial.amount || '0'}`;
+      setText('viewTableAmount', fullAmount);
+      setText('viewTotalAmount', fullAmount);
+      setText('viewTableConcept', `Desarrollo Integral: ${appState.client.projectTitle || 'Diseño'}`);
+      setText('viewPaymentTerms', appState.commercial.paymentTerms);
+      setText('viewRevisions', appState.commercial.revisions);
+
+      // Firmas
+      setText('sigAuthorName', appState.author.name || 'Jesika Bustos');
+      setText('sigAuthorRole', appState.author.role || 'Diseñadora');
+      setText('sigClientName', appState.client.name || 'Cliente');
+      setText('sigClientCompany', appState.client.company || 'Empresa');
+    }
+
+    function renderAll() {
+      populateForm();
+      renderPreview();
+    }
+
+    // Helper para asignar texto
+    function setText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text || '';
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function formatDateSpanish(dateString) {
+      if (!dateString) return 'Fecha actual';
+      try {
+        const [y, m, d] = dateString.split('-');
+        const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        return `${parseInt(d)} de ${months[parseInt(m)-1]}, ${y}`;
+      } catch (e) {
+        return dateString;
+      }
+    }
+
+    // MOTOR DE GENERACIÓN INTELIGENTE (IA LOCAL)
+    function generateSmartProposal() {
+      const type = document.getElementById('designType').value;
+      const obj = document.getElementById('coreObjective').value;
+      const company = document.getElementById('clientCompany').value.trim() || 'la marca';
+      const audience = document.getElementById('briefAudience').value.trim() || 'su público objetivo clave';
+
+      // Seleccionar estilo visual sugerido automáticamente según disciplina
+      let suggestedVibe = 'organic';
+      if (type === 'marketing') suggestedVibe = 'vibrant';
+      else if (type === 'editorial') suggestedVibe = 'sophisticated';
+      else if (type === 'design_system') suggestedVibe = 'minimalist';
+      else if (type === 'comprehensive') suggestedVibe = 'tech';
+
+      document.getElementById('styleVibe').value = suggestedVibe;
+      const vibeData = STYLE_PRESETS[suggestedVibe];
+
+      // 1. Diagnóstico generado
+      let challengeText = '';
+      let approachText = '';
+      let deliverables = [];
+      let estimatedAmount = '2.200.000';
+
+      if (type === 'branding') {
+        challengeText = `${company} necesita construir una identidad visual coherente que transmita profesionalismo y conecte emocionalmente con ${audience}. Actualmente su imagen no proyecta la calidad de su oferta.`;
+        approachText = `Diseñar un sistema de identidad visual versátil y escalable: logotipo, paleta cromática equilibrada, tipografías distintivas y pautas de aplicación que garanticen consistencia en todos sus puntos de contacto.`;
+        deliverables = [
+          { title: 'Identidad Visual & Logotipo Master', desc: 'Isotipo, logotipo, versiones horizontales, verticales y formato para iconos/avatares.' },
+          { title: 'Manual de Identidad y Guía de Estilo', desc: 'Reglas de uso, contrastes cromáticos, jerarquía tipográfica y especificaciones técnicas.' },
+          { title: 'Kit de Elementos Gráficos & Patrones', desc: 'Texturas, iconos de marca y recursos gráficos complementarios.' },
+          { title: 'Aplicaciones Corporativas y Digitales', desc: 'Diseño de papelería básica o plantillas clave para presencia online.' }
+        ];
+        estimatedAmount = '2.500.000';
+      } else if (type === 'marketing') {
+        challengeText = `${company} busca impulsar su presencia en canales digitales para captar la atención de ${audience}, solucionando la falta de piezas gráficas estructuradas para pautas y publicaciones orgánicas.`;
+        approachText = `Crear un sistema de dirección de arte publicitaria centrado en la conversión y la retención visual, con formatos dinámicos para carruseles, reels y anuncios pagados.`;
+        deliverables = [
+          { title: 'Dirección de Arte y Guía de Campaña', desc: 'Concepto visual, paleta de campaña, estilo fotográfico y lineamientos de diseño.' },
+          { title: 'Pack de Contenido para Redes (24 Piezas)', desc: 'Plantillas modulares en Figma para publicaciones, carruseles educativos y stories.' },
+          { title: 'Kit de Creativos para Pauta (Meta/Google Ads)', desc: 'Anuncios en formatos 1:1, 9:16 y 16:9 optimizados para captación de leads.' },
+          { title: 'Guía de Buenas Prácticas de Publicación', desc: 'Recomendaciones de composición, exportación y legibilidad en pantallas móviles.' }
+        ];
+        estimatedAmount = '1.850.000';
+      } else if (type === 'editorial') {
+        challengeText = `${company} requiere estructurar sus publicaciones y documentos hacia un estándar editorial pulido y fácil de leer para ${audience}, evitando el desorden tipográfico.`;
+        approachText = `Desarrollar una retícula editorial modular con jerarquías tipográficas claras, estilos maestros y maquetación armónica para medios impresos y digitales.`;
+        deliverables = [
+          { title: 'Sistema de Retícula y Estilos de Párrafo', desc: 'Configuración de retícula base, márgenes y jerarquías tipográficas estandarizadas.' },
+          { title: 'Plantillas Maestras de Maquetación', desc: 'Templates para portadas, pliegos interiores, índices y páginas de contenido.' },
+          { title: 'Diseño de Portadas y Recursos Editoriales', desc: 'Tratamiento visual de títulos, destacados, tablas y pies de foto.' },
+          { title: 'Preparación de Archivos para Imprenta / PDF Interactivo', desc: 'Configuración técnica con sangrías, perfil de color CMYK o enlaces digitales.' }
+        ];
+        estimatedAmount = '2.900.000';
+      } else {
+        challengeText = `${company} busca integrar sus contenidos digitales bajo una experiencia visual unificada para comunicarse eficazmente con ${audience}.`;
+        approachText = `Estructuración integral de piezas gráficas y contenidos digitales con un lenguaje visual moderno, funcional y adaptado a múltiples dispositivos.`;
+        deliverables = [
+          { title: 'Ecosistema Visual de Contenidos', desc: 'Línea gráfica para canales web, redes y comunicaciones directas.' },
+          { title: 'Kit de Piezas Gráficas Multiformato', desc: 'Diseño de banners, infografías y piezas clave de comunicación.' },
+          { title: 'Plantillas de Trabajo Editables', desc: 'Archivos editables listos para que el equipo interno cree piezas secundarias con facilidad.' }
+        ];
+        estimatedAmount = '2.100.000';
+      }
+
+      // Aplicar al estado
+      appState.strategy.challenge = challengeText;
+      appState.strategy.approach = approachText;
+      appState.strategy.styleVibe = suggestedVibe;
+      appState.deliverables = deliverables;
+      
+      // Aplicar paleta y tipografía recomendadas
+      appState.artDirection.palette = JSON.parse(JSON.stringify(vibeData.palette));
+      appState.artDirection.headingFont = vibeData.headingFont;
+      appState.artDirection.bodyFont = vibeData.bodyFont;
+      appState.artDirection.displayPhrase = vibeData.displayPhrase;
+      appState.artDirection.bodyPhrase = vibeData.bodyPhrase;
+      appState.artDirection.fontRationale = vibeData.rationale;
+
+      if (!appState.commercial.amount || appState.commercial.amount === '0') {
+        appState.commercial.amount = estimatedAmount;
+      }
+
+      populateForm();
+      saveState();
+      renderPreview();
+      showToast('✨ Propuesta, colores y tipografías recomendadas con éxito');
+    }
+
+    // CARGAR PRESETS
+    function loadPresetExample(presetKey) {
+      const preset = PRESETS[presetKey];
+      if (!preset) return;
+
+      appState.theme = preset.theme;
+      appState.client = { ...preset.client };
+      appState.strategy = { ...preset.strategy };
+      appState.artDirection = JSON.parse(JSON.stringify(preset.artDirection));
+      appState.deliverables = JSON.parse(JSON.stringify(preset.deliverables));
+      appState.timeline = { ...preset.timeline };
+      appState.commercial = { ...preset.commercial };
+
+      populateForm();
+      saveState();
+      renderPreview();
+      showToast(`📂 Ejemplo cargado: ${preset.client.company}`);
+    }
+
+    // LIMPIAR A BLANCO
+    function resetFormToBlank() {
+      if (!confirm('¿Deseas iniciar una nueva propuesta en blanco?')) return;
+
+      appState.client = {
+        name: '',
+        company: '',
+        projectTitle: 'Nueva Propuesta de Diseño',
+        code: `PROP-${new Date().getFullYear()}-${Math.floor(Math.random()*899+100)}`,
+        date: new Date().toISOString().split('T')[0]
+      };
+      appState.strategy = {
+        designType: 'branding',
+        objective: 'repositioning',
+        styleVibe: 'organic',
+        audience: '',
+        challenge: '',
+        approach: ''
+      };
+      appState.artDirection.displayPhrase = 'Diseño con propósito, carácter y visión estratégica';
+      appState.artDirection.bodyPhrase = 'Una tipografía estructurada para garantizar lectura fluida, clara y accesible en cualquier soporte.';
+      appState.deliverables = [
+        { title: 'Entregable Principal', desc: 'Detalle de especificaciones y alcance acordado.' }
+      ];
+      appState.commercial.amount = '';
+
+      populateForm();
+      saveState();
+      renderPreview();
+      showToast('📄 Formulario listo para una nueva propuesta');
+    }
+
+    // CAMBIAR TEMA DE ACENTO
+    function changeTheme(themeName) {
+      appState.theme = themeName;
+      applyTheme(themeName);
+      saveState();
+    }
+
+    function applyTheme(themeName) {
+      if (themeName === 'default') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', themeName);
+      }
+    }
+
+    // MODO PRESENTACIÓN ZEN
+    function togglePresentationMode() {
+      document.body.classList.toggle('presentation-mode');
+      if (document.body.classList.contains('presentation-mode')) {
+        showToast('👁️ Modo Presentación activo. Presiona Esc para salir.');
+      }
+    }
+
+    // IMPRESIÓN / PDF
+    function printProposal() {
+      window.print();
+    }
+
+    // COPIAR RESUMEN MARKDOWN
+    function copyMarkdownSummary() {
+      const p = appState;
+      let md = `# ${p.client.projectTitle || 'Propuesta de Diseño'}\n`;
+      md += `**Cliente:** ${p.client.company} (${p.client.name})\n`;
+      md += `**Diseñadora:** ${p.author.name} — ${p.author.role} (${p.author.email} | ${p.author.phone})\n`;
+      md += `**Estudio:** Jika Studio\n`;
+      md += `**Fecha:** ${p.client.date} | **Referencia:** ${p.client.code}\n\n`;
+      
+      md += `## 01. Diagnóstico & Desafío\n${p.strategy.challenge}\n\n`;
+      md += `## 02. Estrategia & Dirección Visual\n${p.strategy.approach}\n`;
+      md += `- **Público Objetivo:** ${p.strategy.audience}\n`;
+      md += `- **Tipografía Display:** ${p.artDirection.headingFont} — “${p.artDirection.displayPhrase}”\n`;
+      md += `- **Tipografía Cuerpo:** ${p.artDirection.bodyFont} — “${p.artDirection.bodyPhrase}”\n`;
+      md += `- **Paleta Cromática:** ${p.artDirection.palette.map(c => `${c.role} (${c.hex})`).join(', ')}\n\n`;
+
+      md += `## 03. Alcance de Entregables\n`;
+      p.deliverables.forEach(d => {
+        md += `- **${d.title}:** ${d.desc}\n`;
+      });
+      md += `\n`;
+
+      md += `## 04. Cronograma de Trabajo\n`;
+      md += `- Fase 1: ${p.timeline.phase1}\n`;
+      md += `- Fase 2: ${p.timeline.phase2}\n`;
+      md += `- Fase 3: ${p.timeline.phase3}\n`;
+      md += `- Fase 4: ${p.timeline.phase4}\n\n`;
+
+      md += `## 05. Inversión Económica\n`;
+      md += `**Total Inversión:** ${p.commercial.currency} ${p.commercial.amount}\n`;
+      md += `**Condiciones de Pago:** ${p.commercial.paymentTerms}\n`;
+      md += `**Revisiones incluidas:** ${p.commercial.revisions}\n`;
+      md += `**Validez de la propuesta:** ${p.commercial.validity}\n`;
+
+      navigator.clipboard.writeText(md).then(() => {
+        showToast('📋 ¡Propuesta copiada en formato Markdown!');
+      }).catch(err => {
+        console.error('Error al copiar:', err);
+        showToast('⚠️ No se pudo copiar automáticamente');
+      });
+    }
+
+    // TOAST NOTIFICATION
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3200);
+    }
+
+    // PESTAÑAS MÓVILES
+    function switchMobileTab(tab) {
+      const panelEditor = document.getElementById('panelEditor');
+      const panelPreview = document.getElementById('panelPreview');
+      const tabEditor = document.getElementById('tabBtnEditor');
+      const tabPreview = document.getElementById('tabBtnPreview');
+
+      if (tab === 'editor') {
+        panelEditor.classList.remove('mobile-hidden');
+        panelPreview.classList.add('mobile-hidden');
+        tabEditor.classList.add('active');
+        tabPreview.classList.remove('active');
+      } else {
+        panelEditor.classList.add('mobile-hidden');
+        panelPreview.classList.remove('mobile-hidden');
+        tabEditor.classList.remove('active');
+        tabPreview.classList.add('active');
+      }
+    }
+
+    // EVENTOS DE TECLADO (ESC para salir de modo presentación)
+    function bindEvents() {
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.body.classList.contains('presentation-mode')) {
+          togglePresentationMode();
+        }
+      });
+    }
+  </script>
+</body>
+</html>
