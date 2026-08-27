@@ -1175,7 +1175,7 @@
     <div class="brand-group">
       <div class="logo-badge" id="studioInitials">JS</div>
       <div class="brand-title">
-        <h1><span class="brand-name" id="headerStudioName">Jika Studio</span> <span>Jesika Bustos</span></h1>
+        <h1><span class="brand-name" id="headerStudioName">Jika Studio</span> <span id="headerAuthorName">Jesika Bustos</span></h1>
       </div>
     </div>
 
@@ -2394,7 +2394,9 @@
     // Renderizar la hoja de la propuesta
     function renderPreview() {
       // Encabezado Diseñador
-      setText('viewAuthorName', appState.author.name || 'Jesika Bustos');
+      const authorName = appState.author.name || 'Jesika Bustos';
+      setText('viewAuthorName', authorName);
+      setText('headerAuthorName', authorName);
       setText('viewAuthorRole', appState.author.role || 'Diseñadora Visual');
       const studioName = appState.author.studioName || 'Jika Studio';
       setText('studioInitials', getStudioInitials(studioName));
