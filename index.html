@@ -72,6 +72,21 @@
       overflow-x: hidden;
     }
 
+    .page-title {
+      padding: 1.5rem 1.25rem 1.1rem;
+      text-align: center;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .page-title h1 {
+      color: var(--text-main);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1;
+    }
+
     /* Barra Superior */
     .top-header {
       background: #ffffff;
@@ -393,70 +408,6 @@
       gap: 0.4rem;
       margin-top: 0.5rem;
 
-    .iconify-search {
-      display: flex;
-      gap: 0.5rem;
-      align-items: flex-end;
-    }
-
-    .iconify-search .form-group {
-      flex: 1;
-    }
-
-    .iconify-results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
-      gap: 0.5rem;
-      margin-top: 0.75rem;
-    }
-
-    .iconify-result {
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      min-width: 0;
-      padding: 0.55rem;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      background: var(--bg-panel);
-      color: var(--text-main);
-      cursor: pointer;
-      text-align: left;
-      font: inherit;
-    }
-
-    .iconify-result:hover,
-    .iconify-result.selected {
-      border-color: var(--accent);
-      background: var(--accent-light);
-    }
-
-    .iconify-result img,
-    .selected-icon-preview img {
-      width: 28px;
-      height: 28px;
-      flex: 0 0 auto;
-    }
-
-    .iconify-result-name {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 0.72rem;
-    }
-
-    .selected-icon-preview {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-top: 0.75rem;
-      padding: 0.65rem 0.75rem;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      background: var(--bg-subtle);
-      font-size: 0.78rem;
-      color: var(--text-secondary);
-    }
     }
 
     .swatch-item-edit {
@@ -1170,6 +1121,10 @@
     Salir de Modo Presentación (Esc)
   </button>
 
+  <div class="page-title">
+    <h1>Crea tu propuesta</h1>
+  </div>
+
   <!-- BARRA SUPERIOR -->
   <header class="top-header">
     <div class="brand-group">
@@ -1375,19 +1330,6 @@
           <div class="color-swatches-editor" id="swatchesEditor">
             <!-- 5 Swatches generados dinámicamente -->
           </div>
-        </div>
-
-        <div class="form-group" style="margin-top: 0.85rem;">
-          <label class="form-label" for="iconifySearchInput">Icono de referencia para la propuesta</label>
-          <div class="iconify-search">
-            <div class="form-group">
-              <input type="search" id="iconifySearchInput" class="form-input" placeholder="Ej: coffee, leaf, camera" onkeydown="if (event.key === 'Enter') searchIconify()">
-            </div>
-            <button class="btn btn-primary" type="button" onclick="searchIconify()">Buscar iconos</button>
-          </div>
-          <div id="iconifySearchStatus" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem;" aria-live="polite"></div>
-          <div class="iconify-results" id="iconifySearchResults"></div>
-          <div class="selected-icon-preview" id="selectedIconPreview" hidden></div>
         </div>
 
         <!-- Editor de Tipografías -->
@@ -1600,8 +1542,6 @@
             <div class="prop-palette-preview" id="viewPalettePreview">
               <!-- Swatches generados dinámicamente -->
             </div>
-
-            <div class="selected-icon-preview" id="viewIconPreview" hidden></div>
 
             <!-- Sistema Tipográfico Sugerido con Muestra de Frase Clara -->
             <div class="typography-pairing-grid">
@@ -2134,8 +2074,6 @@
       document.getElementById('displayPhrase').value = appState.artDirection.displayPhrase || 'Diseño con propósito, carácter y visión estratégica';
       document.getElementById('bodyPhrase').value = appState.artDirection.bodyPhrase || 'Una tipografía estructurada para garantizar lectura fluida, clara y accesible en cualquier soporte.';
       document.getElementById('fontRationale').value = appState.artDirection.fontRationale || '';
-      renderSelectedIcon();
-
       // Fases
       document.getElementById('phase1').value = appState.timeline.phase1;
       document.getElementById('phase2').value = appState.timeline.phase2;
@@ -2204,75 +2142,6 @@
 
       saveState();
       renderPreview();
-    }
-
-    async function searchIconify() {
-      const input = document.getElementById('iconifySearchInput');
-      const results = document.getElementById('iconifySearchResults');
-      const status = document.getElementById('iconifySearchStatus');
-      const query = input.value.trim();
-      if (!query) {
-        status.textContent = 'Escribe un término para buscar iconos.';
-        results.innerHTML = '';
-        return;
-      }
-
-      status.textContent = 'Buscando iconos...';
-      results.innerHTML = '';
-      try {
-        const response = await fetch(`https://api.iconify.design/search?query=${encodeURIComponent(query)}&limit=18`);
-        if (!response.ok) throw new Error('Iconify respondió con un error');
-        const data = await response.json();
-        const icons = Array.isArray(data.icons) ? data.icons : [];
-        if (!icons.length) {
-          status.textContent = 'No se encontraron iconos para esa búsqueda.';
-          return;
-        }
-
-        status.textContent = `${icons.length} resultados encontrados.`;
-        icons.forEach(iconId => {
-          const [prefix, name] = iconId.split(':');
-          if (!prefix || !name) return;
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'iconify-result';
-          button.title = `Usar ${iconId}`;
-          button.innerHTML = `<img src="https://api.iconify.design/${encodeURIComponent(prefix)}/${encodeURIComponent(name)}.svg" alt=""><span class="iconify-result-name">${escapeHtml(iconId)}</span>`;
-          button.addEventListener('click', () => selectIconifyIcon(prefix, name));
-          results.appendChild(button);
-        });
-      } catch (error) {
-        status.textContent = 'No fue posible conectar con Iconify. Revisa tu conexión e inténtalo de nuevo.';
-        console.warn('Error buscando iconos en Iconify:', error);
-      }
-    }
-
-    function selectIconifyIcon(prefix, name) {
-      appState.artDirection.icon = {
-        prefix,
-        name,
-        url: `https://api.iconify.design/${encodeURIComponent(prefix)}/${encodeURIComponent(name)}.svg`
-      };
-      saveState();
-      renderSelectedIcon();
-      renderPreview();
-      showToast(`Icono ${prefix}:${name} seleccionado`);
-    }
-
-    function renderSelectedIcon() {
-      const icon = appState.artDirection.icon;
-      const editorPreview = document.getElementById('selectedIconPreview');
-      const proposalPreview = document.getElementById('viewIconPreview');
-      [editorPreview, proposalPreview].forEach(container => {
-        if (!container) return;
-        if (!icon || !icon.url) {
-          container.hidden = true;
-          container.innerHTML = '';
-          return;
-        }
-        container.hidden = false;
-        container.innerHTML = `<img src="${icon.url}" alt="Icono ${escapeHtml(icon.prefix)}:${escapeHtml(icon.name)}"><span><strong>${escapeHtml(icon.prefix)}:${escapeHtml(icon.name)}</strong><br>Icono seleccionado desde Iconify</span>`;
-      });
     }
 
     // Renderizar paleta de colores en el editor
@@ -2482,8 +2351,6 @@
       }
 
       setText('viewFontRationale', `💡 Criterio de Selección: ${appState.artDirection.fontRationale || 'Armonía visual equilibrada según las necesidades del brief.'}`);
-      renderSelectedIcon();
-
       // Entregables
       const delContainer = document.getElementById('viewDeliverablesList');
       delContainer.innerHTML = '';
