@@ -1163,7 +1163,7 @@
   <!-- BARRA SUPERIOR -->
   <header class="top-header">
     <div class="brand-group">
-      <div class="logo-badge">JS</div>
+      <div class="logo-badge" id="studioInitials">JS</div>
       <div class="brand-title">
         <h1><span class="brand-name" id="headerStudioName">Jika Studio</span> <span>Jesika Bustos</span></h1>
       </div>
@@ -2383,6 +2383,7 @@
       setText('viewAuthorName', appState.author.name || 'Jesika Bustos');
       setText('viewAuthorRole', appState.author.role || 'Diseñadora Visual');
       const studioName = appState.author.studioName || 'Jika Studio';
+      setText('studioInitials', getStudioInitials(studioName));
       setText('headerStudioName', studioName);
       setText('viewStudioName', studioName);
       setText('sigStudioName', studioName);
@@ -2519,6 +2520,13 @@
     function setText(id, text) {
       const el = document.getElementById(id);
       if (el) el.textContent = text || '';
+    }
+
+    function getStudioInitials(studioName) {
+      const words = String(studioName).trim().split(/\s+/).filter(Boolean);
+      if (!words.length) return 'JS';
+      if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+      return `${words[0][0]}${words[1][0]}`.toUpperCase();
     }
 
     function escapeHtml(str) {
