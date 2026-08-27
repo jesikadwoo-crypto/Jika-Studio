@@ -217,6 +217,16 @@
       border-color: var(--border-focus);
     }
 
+    .custom-color-input {
+      width: 38px;
+      height: 34px;
+      padding: 3px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-panel);
+      cursor: pointer;
+    }
+
     /* Contenedor Principal Split */
     .app-container {
       display: grid;
@@ -1186,7 +1196,9 @@
         <option value="ochre">🟡 Ocre Editorial</option>
         <option value="rose">🔴 Terracota / Rose</option>
         <option value="charcoal">⚫ Carbón Minimal</option>
+        <option value="custom">🎨 Personalizado</option>
       </select>
+      <input type="color" class="custom-color-input" id="customAccentColor" value="#2563eb" onchange="changeCustomAccent(this.value)" title="Elegir cualquier color para la interfaz" aria-label="Elegir color personalizado de la interfaz">
 
       <button class="btn btn-magic" onclick="generateSmartProposal()" title="Genera estrategia, colores, tipografías y entregables según el brief">
         <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
@@ -1749,6 +1761,7 @@
 
     let appState = {
       theme: 'default',
+      customAccent: '#2563eb',
       author: {
         name: 'Jesika Bustos',
         role: 'Integradora de contenidos digitales',
@@ -2138,6 +2151,7 @@
 
       // Tema
       document.getElementById('themeSelector').value = appState.theme || 'default';
+      document.getElementById('customAccentColor').value = appState.customAccent || '#2563eb';
       applyTheme(appState.theme || 'default');
 
       renderSwatchesEditor();
@@ -2696,11 +2710,30 @@
       saveState();
     }
 
+    function changeCustomAccent(color) {
+      if (!/^#[0-9a-f]{6}$/i.test(color)) return;
+      appState.customAccent = color;
+      appState.theme = 'custom';
+      document.getElementById('themeSelector').value = 'custom';
+      applyTheme('custom');
+      saveState();
+    }
+
     function applyTheme(themeName) {
+      const root = document.documentElement;
+      root.style.removeProperty('--accent');
+      root.style.removeProperty('--accent-light');
+      root.style.removeProperty('--accent-dark');
       if (themeName === 'default') {
-        document.documentElement.removeAttribute('data-theme');
+        root.removeAttribute('data-theme');
+      } else if (themeName === 'custom') {
+        const customAccent = appState.customAccent || '#2563eb';
+        root.removeAttribute('data-theme');
+        root.style.setProperty('--accent', customAccent);
+        root.style.setProperty('--accent-light', `color-mix(in srgb, ${customAccent} 10%, white)`);
+        root.style.setProperty('--accent-dark', `color-mix(in srgb, ${customAccent} 75%, black)`);
       } else {
-        document.documentElement.setAttribute('data-theme', themeName);
+        root.setAttribute('data-theme', themeName);
       }
     }
 
@@ -2751,7 +2784,7 @@
       md += `**Revisiones incluidas:** ${p.commercial.revisions}\n`;
       md += `**Validez de la propuesta:** ${p.commercial.validity}\n`;
 
-      navigator.clipboard.writeText(md).then(() => {
+      navigator.clipboard.writeText(md).then (() => {
         showToast('📋 ¡Propuesta copiada en formato Markdown!');
       }).catch(err => {
         console.error('Error al copiar:', err);
